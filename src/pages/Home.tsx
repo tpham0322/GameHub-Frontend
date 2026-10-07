@@ -71,15 +71,17 @@ function Home() {
       <div>
         {games.map((game) => (
           <div key={game.id}>
-            {game.background_image && (
-              <img
-                src={game.background_image}
-                alt={game.name}
-                width="200"
-              />
-            )}
+            <a href={`/games/${game.id}`}>
+              {game.background_image && (
+                <img
+                  src={game.background_image}
+                  alt={game.name}
+                  width="200"
+                />
+              )}
 
-            <h2>{game.name}</h2>
+              <h2>{game.name}</h2>
+            </a>
           </div>
         ))}
       </div>
