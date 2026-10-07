@@ -6,6 +6,7 @@ import Register from "./pages/Register";
 import GameDetails from "./pages/GameDetails";
 import Collection from "./pages/Collection";
 import Profile from "./pages/Profile";
+import ProtectedRoute from "./components/ProtectedRoute";
 
 function App() {
   return (
@@ -15,8 +16,21 @@ function App() {
         <Route path="/login" element={<Login />} />
         <Route path="/register" element={<Register />} />
         <Route path="/games/:id" element={<GameDetails />} />
-        <Route path="/collection" element={<Collection />} />
-        <Route path="/profile" element={<Profile />} />
+        <Route path="/collection"
+          element={
+            <ProtectedRoute>
+              <Collection />
+            </ProtectedRoute>
+          }
+        />
+
+        <Route path="/profile"
+          element={
+            <ProtectedRoute>
+              <Profile />
+            </ProtectedRoute>
+          }
+        />
       </Routes>
     </BrowserRouter>
   );
