@@ -4,6 +4,7 @@ import { api } from "../services/api";
 
 interface Game {
   id: number;
+  databaseId: string;
   name: string;
   description: string;
   background_image: string;
@@ -37,6 +38,19 @@ function GameDetails() {
     fetchGame();
   }, [id]);
 
+  const addToCollection = async () => {
+    try {
+      await api.post("/collection", {
+        game: game?.databaseId,
+        status: "Want to Play",
+      });
+
+      alert("Game added to your collection!");
+    } catch (error) {
+      alert("Failed to add game to collection");
+    }
+  };
+
   if (loading) {
     return <p>Loading game...</p>;
   }
@@ -67,6 +81,10 @@ function GameDetails() {
 
       <p>{game.description}</p>
 
+      <button onClick={addToCollection}>
+        Add to Collection
+      </button>
+
       <h2>Genres</h2>
 
       <ul>
@@ -81,3 +99,4 @@ function GameDetails() {
 export default GameDetails;
 
 // Fix game desc pulling <p> tags from the API response
+// Fix allowing duplicate games in collection
