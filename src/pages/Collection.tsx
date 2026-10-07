@@ -34,6 +34,25 @@ function Collection() {
     fetchCollection();
   }, []);
 
+  const updateStatus = async (
+    id: string,
+    status: "Want to Play" | "Playing" | "Completed"
+  ) => {
+    try {
+      const updatedItem = await api.put(`/collection/${id}`, {
+        status,
+      });
+
+      setCollection((currentCollection) =>
+        currentCollection.map((item) =>
+          item._id === id ? updatedItem : item
+        )
+      );
+    } catch (error) {
+      setError("Failed to update game status");
+    }
+  };
+
   if (loading) {
     return <p>Loading collection...</p>;
   }
@@ -62,7 +81,27 @@ function Collection() {
 
               <h2>{item.game.title}</h2>
 
-              <p>Status: {item.status}</p>
+              <label htmlFor={`status-${item._id}`}>
+                Status:
+              </label>
+
+              <select
+                id={`status-${item._id}`}
+                value={item.status}
+                onChange={(event) =>
+                  updateStatus(
+                    item._id,
+                    event.target.value as
+                      | "Want to Play"
+                      | "Playing"
+                      | "Completed"
+                  )
+                }
+              >
+                <option value="Want to Play">Want to Play</option>
+                <option value="Playing">Playing</option>
+                <option value="Completed">Completed</option>
+              </select>
             </div>
           ))}
         </div>
