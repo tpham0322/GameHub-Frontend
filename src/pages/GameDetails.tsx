@@ -36,6 +36,10 @@ function GameDetails() {
   const [reviewsLoading, setReviewsLoading] = useState(true);
   const [reviewsError, setReviewsError] = useState("");
 
+  const [reviewRating, setReviewRating] = useState(5);
+  const [reviewComment, setReviewComment] = useState("");
+  const [reviewSubmitting, setReviewSubmitting] = useState(false);
+
   useEffect(() => {
     const fetchGame = async () => {
       try {
@@ -83,6 +87,38 @@ function GameDetails() {
       alert("Game added to your collection!");
     } catch (error) {
       alert("Failed to add game to collection");
+    }
+  };
+
+  const submitReview = async (event: React.FormEvent) => {
+    event.preventDefault();
+
+    if (!game) {
+      return;
+    }
+
+    setReviewSubmitting(true);
+
+    try {
+      const newReview = await api.post(
+        `/games/${game.databaseId}/reviews`,
+        {
+          rating: reviewRating,
+          comment: reviewComment,
+        }
+      );
+
+      setReviews((currentReviews) => [
+        ...currentReviews,
+        newReview,
+      ]);
+
+      setReviewRating(5);
+      setReviewComment("");
+    } catch (error) {
+      setReviewsError("Failed to submit review");
+    } finally {
+      setReviewSubmitting(false);
     }
   };
 
@@ -147,6 +183,45 @@ function GameDetails() {
           <p>{review.comment}</p>
         </div>
       ))}
+
+      <h2>Write a Review</h2>
+
+      <form onSubmit={submitReview}>
+        <div>
+          <label htmlFor="rating">Rating</label>
+
+          <select
+            id="rating"
+            value={reviewRating}
+            onChange={(event) =>
+              setReviewRating(Number(event.target.value))
+            }
+          >
+            <option value={1}>1</option>
+            <option value={2}>2</option>
+            <option value={3}>3</option>
+            <option value={4}>4</option>
+            <option value={5}>5</option>
+          </select>
+        </div>
+
+        <div>
+          <label htmlFor="comment">Comment</label>
+
+          <textarea
+            id="comment"
+            value={reviewComment}
+            onChange={(event) =>
+              setReviewComment(event.target.value)
+            }
+            placeholder="Write your review..."
+          />
+        </div>
+
+        <button type="submit" disabled={reviewSubmitting}>
+          {reviewSubmitting ? "Submitting..." : "Submit Review"}
+        </button>
+      </form>
     </div>
   );
 }
