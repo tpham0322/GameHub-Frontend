@@ -112,7 +112,7 @@ The main frontend structure is:
 | `/collection` | User's game collection | Yes |
 | `/profile` | User profile | Yes |
 
-## 🔄 Data Flow
+## Data Flow
 
 The frontend communicates with the GameHub Express backend.
 
