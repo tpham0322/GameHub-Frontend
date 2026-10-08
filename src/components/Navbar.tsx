@@ -6,16 +6,16 @@ function Navbar() {
 
   return (
     <nav className="border-b border-slate-800 bg-slate-950/95 text-white backdrop-blur">
-      <div className="mx-auto flex max-w-6xl items-center justify-between px-6 py-4">
+      <div className="mx-auto flex max-w-6xl flex-col gap-4 px-6 py-4 sm:flex-row sm:items-center sm:justify-between">
         <Link
           to="/"
-          className="text-2xl font-bold tracking-tight transition hover:text-cyan-400"
+          className="text-center text-2xl font-bold tracking-tight transition hover:text-cyan-400 sm:text-left"
         >
           <span className="text-blue-500">Game</span>
           <span className="text-cyan-400">Hub</span>
         </Link>
 
-        <div className="flex items-center gap-6">
+        <div className="flex flex-wrap items-center justify-center gap-4 sm:justify-end sm:gap-6">
           <Link
             to="/"
             className="text-sm font-medium text-slate-300 transition hover:text-cyan-400"
@@ -29,7 +29,7 @@ function Navbar() {
                 to="/collection"
                 className="text-sm font-medium text-slate-300 transition hover:text-cyan-400"
               >
-                My Collection
+                Collection
               </Link>
 
               <Link
