@@ -53,6 +53,19 @@ function Collection() {
     }
   };
 
+  const removeFromCollection = async (id: string) => {
+    try {
+      await api.delete(`/collection/${id}`);
+
+      setCollection((currentCollection) =>
+        currentCollection.filter((item) => item._id !== id)
+      );
+    } catch (error) {
+      setError("Failed to remove game from collection");
+    }
+  };
+
+
   if (loading) {
     return <p>Loading collection...</p>;
   }
@@ -102,6 +115,10 @@ function Collection() {
                 <option value="Playing">Playing</option>
                 <option value="Completed">Completed</option>
               </select>
+
+              <button onClick={() => removeFromCollection(item._id)}>
+                Remove
+              </button>
             </div>
           ))}
         </div>
