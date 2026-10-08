@@ -153,6 +153,18 @@ function GameDetails() {
     }
   };
 
+  const deleteReview = async (reviewId: string) => {
+    try {
+      await api.delete(`/games/${reviewId}`);
+
+      setReviews((currentReviews) =>
+        currentReviews.filter((review) => review._id !== reviewId)
+      );
+    } catch (error) {
+      setReviewsError("Failed to delete review");
+    }
+  };
+
   const startEditingReview = (review: Review) => {
     setEditingReviewId(review._id);
     setEditRating(review.rating);
@@ -274,9 +286,15 @@ function GameDetails() {
               <p>{review.comment}</p>
 
               {user && review.user._id === user.id && (
-                <button onClick={() => startEditingReview(review)}>
-                  Edit
-                </button>
+                <div>
+                  <button onClick={() => startEditingReview(review)}>
+                    Edit
+                  </button>
+
+                  <button onClick={() => deleteReview(review._id)}>
+                    Delete
+                  </button>
+                </div>
               )}
             </div>
           )}
