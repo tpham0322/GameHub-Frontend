@@ -86,6 +86,10 @@ function GameDetails() {
     fetchReviews();
   }, [game]);
 
+  const cleanDescription = (description: string) => {
+    return description.replace(/<[^>]*>/g, "");
+  };
+
   const addToCollection = async () => {
     try {
       await api.post("/collection", {
@@ -205,7 +209,7 @@ function GameDetails() {
 
       <p>Rating: {game.rating}</p>
 
-      <p>{game.description}</p>
+      <p>{cleanDescription(game.description)}</p>
 
       <button onClick={addToCollection}>
         Add to Collection
@@ -287,11 +291,15 @@ function GameDetails() {
 
               {user && review.user._id === user.id && (
                 <div>
-                  <button onClick={() => startEditingReview(review)}>
+                  <button
+                    onClick={() => startEditingReview(review)}
+                  >
                     Edit
                   </button>
 
-                  <button onClick={() => deleteReview(review._id)}>
+                  <button
+                    onClick={() => deleteReview(review._id)}
+                  >
                     Delete
                   </button>
                 </div>
