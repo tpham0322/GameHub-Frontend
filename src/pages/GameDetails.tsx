@@ -16,12 +16,25 @@ interface Game {
   }[];
 }
 
+interface Review {
+  _id: string;
+  rating: number;
+  comment: string;
+  user: {
+    username: string;
+  };
+}
+
 function GameDetails() {
   const { id } = useParams();
 
   const [game, setGame] = useState<Game | null>(null);
   const [loading, setLoading] = useState(true);
   const [error, setError] = useState("");
+
+  const [reviews, setReviews] = useState<Review[]>([]);
+  const [reviewsLoading, setReviewsLoading] = useState(true);
+  const [reviewsError, setReviewsError] = useState("");
 
   useEffect(() => {
     const fetchGame = async () => {
@@ -37,6 +50,28 @@ function GameDetails() {
 
     fetchGame();
   }, [id]);
+
+  useEffect(() => {
+    if (!game) {
+      return;
+    }
+
+    const fetchReviews = async () => {
+      try {
+        const data = await api.get(
+          `/games/${game.databaseId}/reviews`
+        );
+
+        setReviews(data);
+      } catch (error) {
+        setReviewsError("Failed to load reviews");
+      } finally {
+        setReviewsLoading(false);
+      }
+    };
+
+    fetchReviews();
+  }, [game]);
 
   const addToCollection = async () => {
     try {
@@ -92,11 +127,28 @@ function GameDetails() {
           <li key={genre.id}>{genre.name}</li>
         ))}
       </ul>
+
+      <h2>Reviews</h2>
+
+      {reviewsLoading && <p>Loading reviews...</p>}
+
+      {reviewsError && <p>{reviewsError}</p>}
+
+      {!reviewsLoading && reviews.length === 0 && (
+        <p>No reviews yet.</p>
+      )}
+
+      {reviews.map((review) => (
+        <div key={review._id}>
+          <h3>{review.user.username}</h3>
+
+          <p>Rating: {review.rating}/5</p>
+
+          <p>{review.comment}</p>
+        </div>
+      ))}
     </div>
   );
 }
 
 export default GameDetails;
-
-// Fix game desc pulling <p> tags from the API response
-// Fix allowing duplicate games in collection
