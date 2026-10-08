@@ -87,7 +87,12 @@ function GameDetails() {
   }, [game]);
 
   const cleanDescription = (description: string) => {
-    return description.replace(/<[^>]*>/g, "");
+    const text = description.replace(/<[^>]*>/g, "");
+
+    const textarea = document.createElement("textarea");
+    textarea.innerHTML = text;
+
+    return textarea.value;
   };
 
   const addToCollection = async () => {
